@@ -3,53 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journal amélioré</title>
+<title>Le Journal du Jour</title>
 
 <style>
 body {
   font-family: "Times New Roman", serif;
   margin: 0;
-  background: #f4f4f4;
+  background-color: #f4f4f4;
+  color: #222;
 }
 
 header {
-  background: #c00;
+  background-color: #c00;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 20px 0;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 nav {
-  background: #333;
+  background-color: #333;
   color: white;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  align-items: center;
+  padding: 10px 20px;
 }
 
-button {
-  background: #c00;
-  color: white;
+nav button {
+  background-color: #c00;
   border: none;
-  padding: 8px;
-  margin-left: 5px;
+  color: white;
+  padding: 8px 15px;
   cursor: pointer;
 }
 
 main {
   max-width: 900px;
-  margin: 20px auto;
-  background: white;
+  margin: 30px auto;
+  background-color: white;
   padding: 20px;
 }
 
 article {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+article h2 {
+  color: #c00;
+  border-bottom: 2px solid #c00;
 }
 
 img {
   max-width: 100%;
   cursor: move;
+}
+
+footer {
+  text-align: center;
+  background: #222;
+  color: white;
+  padding: 10px;
 }
 
 .toolbar {
@@ -70,7 +85,7 @@ img {
 <header>LE JOURNAL DU JOUR</header>
 
 <nav>
-<div>Actualités</div>
+<div>Actualités • Culture • Sport • Monde</div>
 <div>
 <button id="btnConnexion">Connexion</button>
 </div>
@@ -85,15 +100,17 @@ img {
 
 <main id="contenu">
 <article contenteditable="false">
-<h2>Titre</h2>
-<p>Ton texte ici...</p>
+<h2>Titre de l'article</h2>
+<p>Ici votre article de presse...</p>
+<img src="https://via.placeholder.com/800x400" alt="Image">
 </article>
 </main>
+
+<footer>© 2024 Le Journal du Jour</footer>
 
 <script>
 let edition = false;
 const btn = document.getElementById("btnConnexion");
-const articles = document.querySelectorAll("article");
 const toolbar = document.getElementById("toolbar");
 const contenu = document.getElementById("contenu");
 
@@ -111,19 +128,17 @@ function save() {
 // Mode édition
 btn.onclick = () => {
   if (!edition) {
-    const code = prompt("Code :");
+    const code = prompt("Entrez le code :");
     if (code === "1953") {
       edition = true;
       toolbar.style.display = "block";
       document.querySelectorAll("article").forEach(a => a.contentEditable = true);
-      alert("Mode édition activé");
     }
   } else {
     edition = false;
     toolbar.style.display = "none";
     document.querySelectorAll("article").forEach(a => a.contentEditable = false);
     save();
-    alert("Sauvegardé !");
   }
 };
 
@@ -132,7 +147,7 @@ document.addEventListener("input", () => {
   if (edition) save();
 });
 
-// Sauvegarde quand on quitte ou actualise
+// Sauvegarde refresh
 window.addEventListener("beforeunload", () => {
   save();
 });
@@ -146,6 +161,7 @@ addImg.onclick = () => {
     img.src = url;
     img.draggable = true;
     document.activeElement.appendChild(img);
+    save();
   }
 };
 

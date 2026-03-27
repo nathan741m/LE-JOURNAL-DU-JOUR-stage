@@ -1,143 +1,166 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Le Journal du Jour</title>
-  <style>
-    body {
-      font-family: "Times New Roman", serif;
-      margin: 0;
-      background-color: #f4f4f4;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal amélioré</title>
 
-    header {
-      background-color: #c00;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 2rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
+<style>
+body {
+  font-family: "Times New Roman", serif;
+  margin: 0;
+  background: #f4f4f4;
+}
 
-    nav {
-      background-color: #333;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-    }
+header {
+  background: #c00;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
 
-    nav button {
-      background-color: #c00;
-      border: none;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+nav {
+  background: #333;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
 
-    nav button:hover {
-      background-color: #900;
-    }
+button {
+  background: #c00;
+  color: white;
+  border: none;
+  padding: 8px;
+  margin-left: 5px;
+  cursor: pointer;
+}
 
-    main {
-      max-width: 900px;
-      margin: 30px auto;
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
+main {
+  max-width: 900px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+}
 
-    article {
-      margin-bottom: 30px;
-    }
+article {
+  margin-bottom: 20px;
+}
 
-    article h2 {
-      color: #c00;
-      border-bottom: 2px solid #c00;
-      padding-bottom: 5px;
-    }
+img {
+  max-width: 100%;
+  cursor: move;
+}
 
-    article img {
-      max-width: 100%;
-      display: block;
-      margin: 10px 0;
-    }
+.toolbar {
+  display: none;
+  background: #eee;
+  padding: 10px;
+  text-align: center;
+}
 
-    footer {
-      text-align: center;
-      background: #222;
-      color: white;
-      padding: 10px;
-      margin-top: 40px;
-    }
-
-    /* zone d'édition quand activée */
-    [contenteditable="true"] {
-      border: 1px dashed #999;
-      padding: 5px;
-      background-color: #fffceb;
-    }
-  </style>
+[contenteditable="true"] {
+  border: 1px dashed #999;
+}
+</style>
 </head>
+
 <body>
-  <header>LE JOURNAL DU JOUR</header>
 
-  <nav>
-    <div>Actualités • Culture • Sport • Monde</div>
-    <button id="btnConnexion">Connexion</button>
-  </nav>
+<header>LE JOURNAL DU JOUR</header>
 
-  <main id="contenu">
-    <article contenteditable="false">
-      <h2>Titre de l'article</h2>
-      <p>Ici votre article de presse. Par exemple : le nouveau projet du lycée a été inauguré aujourd’hui...</p>
-      <img src="[via.placeholder.com](https://via.placeholder.com/800x400)" alt="Image d'article">
-    </article>
-  </main>
+<nav>
+<div>Actualités</div>
+<div>
+<button id="btnConnexion">Connexion</button>
+</div>
+</nav>
 
-  <footer>© 2024 Le Journal du Jour</footer>
+<div class="toolbar" id="toolbar">
+<button onclick="document.execCommand('bold')">Gras</button>
+<button onclick="document.execCommand('italic')">Italique</button>
+<button onclick="document.execCommand('underline')">Souligné</button>
+<button id="addImg">Ajouter image</button>
+</div>
 
-  <script>
-    const btnConnexion = document.getElementById("btnConnexion");
-    const articles = document.querySelectorAll("article");
-    let editionActive = false;
+<main id="contenu">
+<article contenteditable="false">
+<h2>Titre</h2>
+<p>Ton texte ici...</p>
+</article>
+</main>
 
-    btnConnexion.addEventListener("click", () => {
-      if (!editionActive) {
-        const code = prompt("Entrez le code d'accès pour modifier :");
-        if (code === "1953") {
-          editionActive = true;
-          btnConnexion.textContent = "Mode édition activé";
-          articles.forEach(a => a.setAttribute("contenteditable", "true"));
-          alert("Mode édition activé ! Vous pouvez modifier les textes et ajouter des images !");
-        } else {
-          alert("Code incorrect !");
-        }
-      } else {
-        editionActive = false;
-        btnConnexion.textContent = "Connexion";
-        articles.forEach(a => a.setAttribute("contenteditable", "false"));
-        alert("Mode édition désactivé.");
-      }
-    });
+<script>
+let edition = false;
+const btn = document.getElementById("btnConnexion");
+const articles = document.querySelectorAll("article");
+const toolbar = document.getElementById("toolbar");
+const contenu = document.getElementById("contenu");
 
-    // Permet d'ajouter une image via un collage d'URL
-    document.addEventListener("keydown", (e) => {
-      if (editionActive && e.ctrlKey && e.key === "i") {
-        const url = prompt("URL de l'image à insérer :");
-        if (url) {
-          const img = document.createElement("img");
-          img.src = url;
-          document.activeElement.appendChild(img);
-        }
-      }
-    });
-  </script>
+// Charger sauvegarde
+window.onload = () => {
+  const saved = localStorage.getItem("journal");
+  if (saved) contenu.innerHTML = saved;
+};
+
+// Sauvegarde
+function save() {
+  localStorage.setItem("journal", contenu.innerHTML);
+}
+
+// Mode édition
+btn.onclick = () => {
+  if (!edition) {
+    const code = prompt("Code :");
+    if (code === "1953") {
+      edition = true;
+      toolbar.style.display = "block";
+      document.querySelectorAll("article").forEach(a => a.contentEditable = true);
+      alert("Mode édition activé");
+    }
+  } else {
+    edition = false;
+    toolbar.style.display = "none";
+    document.querySelectorAll("article").forEach(a => a.contentEditable = false);
+    save();
+    alert("Sauvegardé !");
+  }
+};
+
+// Sauvegarde auto
+document.addEventListener("input", () => {
+  if (edition) save();
+});
+
+// Ajouter image
+const addImg = document.getElementById("addImg");
+addImg.onclick = () => {
+  const url = prompt("URL image :");
+  if (url) {
+    const img = document.createElement("img");
+    img.src = url;
+    img.draggable = true;
+    document.activeElement.appendChild(img);
+  }
+};
+
+// Drag image
+let dragged;
+document.addEventListener("dragstart", e => {
+  if (e.target.tagName === "IMG") dragged = e.target;
+});
+
+document.addEventListener("dragover", e => e.preventDefault());
+
+document.addEventListener("drop", e => {
+  e.preventDefault();
+  if (dragged && edition) {
+    e.target.appendChild(dragged);
+    save();
+  }
+});
+
+</script>
+
 </body>
 </html>

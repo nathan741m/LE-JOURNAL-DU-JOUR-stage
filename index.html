@@ -58,6 +58,9 @@ article h2 {
 img {
   max-width: 100%;
   cursor: move;
+  resize: both;
+  overflow: auto;
+  display: inline-block;
 }
 
 footer {
@@ -95,6 +98,8 @@ footer {
 <button onclick="document.execCommand('bold')">Gras</button>
 <button onclick="document.execCommand('italic')">Italique</button>
 <button onclick="document.execCommand('underline')">Souligné</button>
+<input type="color" id="colorPicker" title="Couleur du texte">
+<button onclick="changeColor()">Couleur</button>
 <button id="addImg">Ajouter image</button>
 </div>
 
@@ -180,6 +185,38 @@ document.addEventListener("drop", e => {
     save();
   }
 });
+
+// Redimensionner image avec molette
+contenu.addEventListener("wheel", (e) => {
+  if (edition && e.target.tagName === "IMG") {
+    e.preventDefault();
+    let width = e.target.width;
+    width += e.deltaY > 0 ? -20 : 20;
+    e.target.style.width = width + "px";
+    save();
+  }
+});
+
+// Couleur texte
+function changeColor() {
+  const color = document.getElementById("colorPicker").value;
+  document.execCommand("foreColor", false, color);
+}
+
+document.addEventListener("dragover", e => e.preventDefault());
+
+document.addEventListener("drop", e => {
+  e.preventDefault();
+  if (dragged && edition) {
+    e.target.appendChild(dragged);
+    save();
+  }
+});
+
+</script>
+
+</body>
+</html>
 
 </script>
 

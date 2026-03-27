@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Journal du Jour</title>
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #222;
+    }
+
+    header {
+      background-color: #c00;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      background-color: #333;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    nav button {
+      background-color: #c00;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    nav button:hover {
+      background-color: #900;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    article {
+      margin-bottom: 30px;
+    }
+
+    article h2 {
+      color: #c00;
+      border-bottom: 2px solid #c00;
+      padding-bottom: 5px;
+    }
+
+    article img {
+      max-width: 100%;
+      display: block;
+      margin: 10px 0;
+    }
+
+    footer {
+      text-align: center;
+      background: #222;
+      color: white;
+      padding: 10px;
+      margin-top: 40px;
+    }
+
+    /* zone d'édition quand activée */
+    [contenteditable="true"] {
+      border: 1px dashed #999;
+      padding: 5px;
+      background-color: #fffceb;
+    }
+  </style>
+</head>
+<body>
+  <header>LE JOURNAL DU JOUR</header>
+
+  <nav>
+    <div>Actualités • Culture • Sport • Monde</div>
+    <button id="btnConnexion">Connexion</button>
+  </nav>
+
+  <main id="contenu">
+    <article contenteditable="false">
+      <h2>Titre de l'article</h2>
+      <p>Ici votre article de presse. Par exemple : le nouveau projet du lycée a été inauguré aujourd’hui...</p>
+      <img src="[via.placeholder.com](https://via.placeholder.com/800x400)" alt="Image d'article">
+    </article>
+  </main>
+
+  <footer>© 2024 Le Journal du Jour</footer>
+
+  <script>
+    const btnConnexion = document.getElementById("btnConnexion");
+    const articles = document.querySelectorAll("article");
+    let editionActive = false;
+
+    btnConnexion.addEventListener("click", () => {
+      if (!editionActive) {
+        const code = prompt("Entrez le code d'accès pour modifier :");
+        if (code === "1953") {
+          editionActive = true;
+          btnConnexion.textContent = "Mode édition activé";
+          articles.forEach(a => a.setAttribute("contenteditable", "true"));
+          alert("Mode édition activé ! Vous pouvez modifier les textes et ajouter des images !");
+        } else {
+          alert("Code incorrect !");
+        }
+      } else {
+        editionActive = false;
+        btnConnexion.textContent = "Connexion";
+        articles.forEach(a => a.setAttribute("contenteditable", "false"));
+        alert("Mode édition désactivé.");
+      }
+    });
+
+    // Permet d'ajouter une image via un collage d'URL
+    document.addEventListener("keydown", (e) => {
+      if (editionActive && e.ctrlKey && e.key === "i") {
+        const url = prompt("URL de l'image à insérer :");
+        if (url) {
+          const img = document.createElement("img");
+          img.src = url;
+          document.activeElement.appendChild(img);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

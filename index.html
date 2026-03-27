@@ -119,15 +119,44 @@ const btn = document.getElementById("btnConnexion");
 const toolbar = document.getElementById("toolbar");
 const contenu = document.getElementById("contenu");
 
-// Charger sauvegarde
-window.onload = () => {
-  const saved = localStorage.getItem("journal");
-  if (saved) contenu.innerHTML = saved;
-};
+// ⚠️ IMPORTANT : stockage en ligne (remplace localStorage)
+const API_URL = "https://api.jsonbin.io/v3/b/TON_ID"; // mets ton ID ici
+const API_KEY = "TA_CLE_API"; // mets ta clé ici
+
+// Charger depuis internet
+async function loadOnline() {
+  try {
+    const res = await fetch(API_URL, {
+      headers: { "X-Master-Key": API_KEY }
+    });
+    const data = await res.json();
+    if (data.record) contenu.innerHTML = data.record.content;
+  } catch (err) {
+    console.log("Erreur chargement", err);
+  }
+}
+
+// Sauvegarder en ligne
+async function saveOnline() {
+  try {
+    await fetch(API_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": API_KEY
+      },
+      body: JSON.stringify({ content: contenu.innerHTML })
+    });
+  } catch (err) {
+    console.log("Erreur sauvegarde", err);
+  }
+}
+
+window.onload = loadOnline;
 
 // Sauvegarde
 function save() {
-  localStorage.setItem("journal", contenu.innerHTML);
+  saveOnline();
 }
 
 // Mode édition
@@ -149,12 +178,12 @@ btn.onclick = () => {
 
 // Sauvegarde auto
 document.addEventListener("input", () => {
-  if (edition) save();
+  if (edition) saveOnline();
 });
 
 // Sauvegarde refresh
 window.addEventListener("beforeunload", () => {
-  save();
+  saveOnline();
 });
 
 // Ajouter image
@@ -212,11 +241,6 @@ document.addEventListener("drop", e => {
     save();
   }
 });
-
-</script>
-
-</body>
-</html>
 
 </script>
 

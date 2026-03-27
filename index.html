@@ -132,6 +132,11 @@ document.addEventListener("input", () => {
   if (edition) save();
 });
 
+// Sauvegarde quand on quitte ou actualise
+window.addEventListener("beforeunload", () => {
+  save();
+});
+
 // Ajouter image
 const addImg = document.getElementById("addImg");
 addImg.onclick = () => {
